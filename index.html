@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewLight - Energía Limpia para tu Hogar</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>NewLight</h1>
+            <nav>
+                <input type="text" id="search-bar" placeholder="Buscar productos...">
+                <a href="auth.html" class="btn btn-primary">Iniciar Sesión</a>
+                <a href="admin.html" class="btn btn-secondary">Administrador</a>
+                <a href="checkout.html" id="cart-icon" class="btn btn-primary">Carrito (<span id="cart-count">0</span>)</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="container">
+                <h2>Energía Limpia para tu Hogar</h2>
+                <p>Descubre nuestros paquetes de paneles solares y comienza a ahorrar hoy.</p>
+            </div>
+        </section>
+
+        <section id="packages" class="packages">
+            <div class="container">
+                <h2>Paquetes Disponibles</h2>
+                <div class="package-grid">
+                    <div class="package" id="package1">
+                        <img src="imagenes/paneles-solares-en-monterrey.jpg" alt="Panel Solar Básico" loading="lazy">
+                        <h3>Paquete Básico</h3>
+                        <p>Incluye 4 paneles solares de 100W.</p>
+                        <p class="price">Precio: $40,000</p>
+                        <button class="btn btn-secondary add-to-cart" data-id="1" data-name="Paquete Básico" data-price="40000" data-image="imagenes/paneles-solares-en-monterrey.jpg">
+                            Agregar al Carrito
+                        </button>
+                    </div>
+                    
+                    <div class="package" id="package2">
+                        <img src="imagenes/Paneles-solares-policristalinos.jpg" alt="Panel Solar Avanzado" loading="lazy">
+                        <h3>Paquete Avanzado</h3>
+                        <p>Incluye 8 paneles solares de 150W.</p>
+                        <p class="price">Precio: $80,000</p>
+                        <button class="btn btn-secondary add-to-cart" data-id="2" data-name="Paquete Avanzado" data-price="80000" data-image="imagenes/Paneles-solares-policristalinos.jpg">
+                            Agregar al Carrito
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE CONTÁCTANOS -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Contáctanos</h2>
+                <form id="form">
+                    <div>
+                        <label for="name">Nombre</label>
+                        <input type="text" id="name" name="user_name" placeholder="Tu nombre" required>
+                    </div>
+                    <div>
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="user_email" placeholder="Tu correo electrónico" required>
+                    </div>
+                    <div>
+                        <label for="message">Mensaje</label>
+                        <textarea id="message" name="user_message" placeholder="Tu mensaje" required></textarea>
+                    </div>
+                    <button type="submit" id="button">Enviar</button>
+                </form>
+            </div>
+        </section>        
+    </main>
+    
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2024 Paneles Solares - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        // Inicializa email.js
+        emailjs.init("Uttcblm181q-j3N08");
+
+        // Envía el formulario
+        const btn = document.getElementById('button');
+
+        document.getElementById('form')
+        .addEventListener('submit', function(event) {
+            event.preventDefault();
+            btn.textContent = 'Enviando...';
+
+            const serviceID = 'default_service';
+            const templateID = 'template_rjhnt54';
+
+            emailjs.sendForm(serviceID, templateID, this)
+            .then(() => {
+                btn.textContent = 'Enviar';
+                alert('¡Mensaje enviado con éxito!');
+                this.reset(); // Limpia el formulario
+            }, (err) => {
+                btn.textContent = 'Enviar';
+                alert(JSON.stringify(err));
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+

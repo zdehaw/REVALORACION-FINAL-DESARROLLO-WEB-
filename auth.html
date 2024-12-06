@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autenticación</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('https://recursos.galt.mx/hubfs/IMG_1364.jpg'); /* URL de la imagen de fondo */
+            background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+            background-position: center; /* Centra toda la imagen de fondo */
+            background-repeat: no-repeat; /* Que no se repita la imagen*/
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8); /* Fondo blanco semi-transparente para mejorar la visibilidad del contenido */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #25f073;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .btn.green {
+            background-color: #38cc5a;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        a {
+            display: block;
+            margin-top: 10px;
+            color: #000000;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sección de Inicio de Sesión -->
+        <div id="login-section">
+            <h1>Iniciar Sesión</h1>
+            <form>
+                <input type="email" id="login-email" placeholder="Correo electrónico" required>
+                <input type="password" id="login-password" placeholder="Contraseña" required>
+                <button class="btn" type="button" onclick="login()">Iniciar sesión</button>
+            </form>
+            <a href="#" onclick="showSection('recover-section')">¿Olvidaste tu contraseña?</a>
+            <hr>
+            <button class="btn green" onclick="showSection('register-section')">Crear cuenta nueva</button>
+        </div>
+
+        <!-- Sección de Registro -->
+        <div id="register-section" class="hidden">
+            <h1>Registro</h1>
+            <form>
+                <input type="text" id="register-name" placeholder="Nombre completo" required>
+                <input type="email" id="register-email" placeholder="Correo electrónico" required>
+                <input type="password" id="register-password" placeholder="Contraseña" required>
+                <button class="btn green" type="button" onclick="register()">Registrarse</button>
+            </form>
+            <a href="#" onclick="showSection('login-section')">Volver a Iniciar Sesión</a>
+        </div>
+
+        <!-- Sección de Recuperación de Contraseña -->
+        <div id="recover-section" class="hidden">
+            <h1>Recuperar Contraseña</h1>
+            <form id="recover-form">
+                <input type="email" id="recover-email" placeholder="Correo electrónico" required>
+                <button class="btn" type="button" onclick="recoverPassword()">Recuperar contraseña</button>
+            </form>
+            <a href="#" onclick="showSection('login-section')">Volver a Iniciar Sesión</a>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <script>
+        // Inicializar EmailJS
+        emailjs.init("Uttcblm181q-j3N08"); // Tu clave de usuario de EmailJS
+
+        // Mostrar la sección seleccionada
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.container > div');
+            sections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // Guardar y cargar datos del almacenamiento local
+        function loadFromDB() {
+            return JSON.parse(localStorage.getItem('users')) || [];
+        }
+
+        function saveToDB(users) {
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Registrar un nuevo usuario
+        function register() {
+            const name = document.getElementById("register-name").value;
+            const email = document.getElementById("register-email").value;
+            const password = document.getElementById("register-password").value;
+
+            let users = loadFromDB();
+
+            if (users.some(user => user.email === email)) {
+                alert("El correo ya está registrado.");
+                return;
+            }
+
+            users.push({ name, email, password });
+            saveToDB(users);
+            alert("Registro exitoso. Ahora puedes iniciar sesión.");
+            showSection('login-section');
+        }
+
+        // Iniciar sesión
+        function login() {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+
+            let users = loadFromDB();
+
+            if (users.some(user => user.email === email && user.password === password)) {
+                alert("Inicio de sesión exitoso.");
+                window.location.href = "index.html"; // Redirigir al inicio
+            } else {
+                alert("Correo o contraseña incorrectos.");
+            }
+        }
+
+        // Recuperar contraseña
+        function recoverPassword() {
+            let users = loadFromDB();
+
+            const email = document.getElementById('recover-email').value;
+            const user = users.find(user => user.email === email);
+
+            if (user) {
+                // Mostrar la contraseña en un alert
+                alert(`Tu contraseña es: ${user.password}`);
+
+                // Enviar correo con EmailJS
+                const serviceID = 'service_eac6mzh'; // ID del servicio de EmailJS
+                const templateID = 'template_rjhnt54'; // ID de la plantilla de EmailJS
+
+                const templateParams = {
+                    user_email: email,
+                    user_password: user.password,
+                    user_name: user.name
+                };
+
+                // Enviar el correo con la configuración correcta
+                emailjs.send(serviceID, templateID, templateParams)
+                    .then(() => {
+                        alert("Se ha enviado un correo con tu contraseña.");
+                    }, (err) => {
+                        alert("Hubo un error al enviar el correo: " + JSON.stringify(err));
+                    });
+            } else {
+                alert("Correo no encontrado.");
+            }
+        }
+        
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

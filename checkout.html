@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Mi Carrito</h1>
+            <a href="index.html" class="btn btn-secondary">Volver al Inicio</a>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Mi Carrito</h2>
+            <div class="cart-container">
+                <div class="cart-items" id="cart-items">
+                    <!-- Los productos se cargarán aquí dinámicamente -->
+                </div>
+                <div class="cart-summary">
+                    <button id="clear-cart" class="btn btn-secondary">Vaciar Carrito</button>
+                    <h3>Sub-Total: $<span id="subtotal">0</span></h3>
+                    <h3>TOTAL (con IVA): $<span id="total">0</span></h3>
+                    <button class="btn btn-primary" id="checkout">Continuar a Pagar</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2024 Paneles Solares - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/checkout.js"></script>
+</body>
+</html>
